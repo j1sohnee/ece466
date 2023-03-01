@@ -6,8 +6,7 @@
 void yyerror(char *s);
 
 /* build an astnode node */
-struct astnode *allocateastnode(int type, struct astnode *left, struct astnode *right){
-s
+struct astnode *allocate_astnode(int type, struct astnode *left, struct astnode *right, struct VAL value){
 	struct astnode *node = malloc(sizeof(struct astnode));
 	if(!node) {
 		yyerror("out of space");
@@ -21,11 +20,12 @@ s
 			node->right = right;
 			break;
 		case 1:	// BINOP
-			node->nodetype = type;
+			node->operator = value;
 			node->left = left;
 			node->right = right;
 			break;
 		case 2: // NUMBER
+			node->value = value;
 		default: // err
 	}
 	
@@ -34,32 +34,22 @@ s
 
 }
 
-struct astnode *allocateastnodeleaf(int value){
-	
-	struct astnodeleaf *node = malloc(sizeof(struct astnodeleaf));
-	if(!node) {
-		yyerror("out of space");
-		exit(0);
-	}
-	node->type = NUMBER;
-	node->value = value;
 
-	return (struct astnode *) node;
-
-}
-
-/* evaluate an astnode */
-int evaluateastnode(struct astnode *node){ 
+/* evaluate an astnode 
+int evaluate_astnode(struct astnode *node){ 
 
 	int result;
 
 	switch(node->type) {
 
-		case ADD:
-				result = evaluateastnode(node->left) + evaluateastnode(node->right);
+		case 0: // GENERIC
+				
 				break;
-		case NUMBER:
-				result = ((struct astnode_leaf *)node)->value;
+		case 1:	// BINOP
+				
+				break;
+		case 2: // NUMBER
+				
 				break;
 		default:
 				printf("internal error: bad node %d\n", node->type);
@@ -68,24 +58,30 @@ int evaluateastnode(struct astnode *node){
 	
 	return result;
 }
+*/
 
 /* delete and free an astnode */
-void freeastnode(struct astnode *){
+void free_astnode(struct astnode *){
 
 	switch(node->type) {
-		case ADD:
-				freeastnode(node->left);
-				freeastnode(node->right);
-		case NUMBER:
+		case 0: // GENERIC
+				free_astnode(node->left);
+				free_astnode(node->right);
+				break;
+		case 1:	// BINOP
+				free_astnode(node->left);
+				free_astnode(node->right);
+				break;
+		case 2: // NUMBER
 				free(node);
 				break;
 		default:
-				printf("internal error: free bad node %d\n", node->type);
+				printf("internal error: bad node %d\n", node->type);
 				break;
 }
 
 
-void printastnode(struct astnode *node) {
+void print_astnode(struct astnode *node) {
 /*
 ASSIGNMENT
 	IDENT xyz
@@ -94,12 +90,5 @@ ASSIGNMENT
 		IDENT abc
 */
 	switch(node->type) {
-		case ADD:
-				printastnode(node->left);
-				print("+");
-				printastnode(node->right);
-				break;
-		case NUMBER:
-				printf("%d", ((struct astnodeleaf *)node)->value);
-				break;
+
 }
