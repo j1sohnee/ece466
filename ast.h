@@ -66,11 +66,11 @@ struct astnode {
 
 
 // build an AST node
-struct ast *allocateAST(int type, struct AST *, struct AST *);
-struct ast *allocateASTleaf(int);
+struct ast *allocate_astnode(int type, struct AST *, struct AST *);
+struct ast *allocate_astleaf(int);
 
 // evaluate an AST
-int evaluateAST(struct AST *);
+int evaluate_astnode(struct AST *);
 
 // delete and free an AST
-void freeAST(struct AST *);
+void free_astnode(struct AST *);
